@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsAspireHost>true</IsAspireHost>
+		<UserSecretsId>8122a942-6838-4c24-a2b6-65a35c2f3cc2</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+		<PackageReference Include="Aspire.Hosting.NodeJs" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\HR-Test-App.WeatherForecastAPI\HR-Test-App.WeatherForecastAPI.csproj" />
+	</ItemGroup>
+
+	<Target Name="RestoreNpm" BeforeTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec Command="node --version" ContinueOnError="true">
+        <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run the project" />
+
+    <Message Importance="high" Text="Restoring npm packages..." />
+
+    <Exec Command="npm install" 
+          WorkingDirectory="$(MSBuildProjectDirectory)" 
+          Condition="Exists('$(MSBuildProjectDirectory)/package.json')" />
+</Target>
+
+
+</Project>
